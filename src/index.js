@@ -1,12 +1,12 @@
-const express = require('express');
-
-const app = express();
-
+var express = require('express');
+var app = express();
 
 
-
-app.use(express.json({limit: '50mb'}));
-
+const routes = require('./routes')
 
 
-app.listen(9000, () => console.log('Express started at http://localhost:9000'));
+app.use(routes)
+
+
+
+app.listen(3000);
