@@ -8,15 +8,15 @@ var delimitadores = require('../node/delimitadores')
 //var codigo = fs.readFileSync('data/imputCode.js', 'utf8')
 
 
-const code = '/* Analisador Léxico */'
+
 
 module.exports = {
 
      async le_Token(request, response) {
 
-          const { codigo } = request.body;          
+          const { codigo } = request.body;
 
-          var cvsFile = ''              
+          var saida = ''
 
 
           var tipo = "nada";         // Identifica o tipo de char do token atual
@@ -39,9 +39,9 @@ module.exports = {
                     }
 
                     if (!barraInvertida && char == '\\')
-                    barraInvertida = true;
+                         barraInvertida = true;
                     else
-                    barraInvertida = false;
+                         barraInvertida = false;
 
                     tipo = "delimitador";
 
@@ -54,7 +54,7 @@ module.exports = {
 
                     atual_token += char;
                     if (verificaBloco == '*/') {
-                         comentarioBloco= false;
+                         comentarioBloco = false;
                          tipo = "comentario";
                          atual_token = checkToken(atual_token);
                     }
@@ -153,43 +153,43 @@ module.exports = {
                               break;
 
                          case "comentario":
-                              insertTable(atual_token, 'Comentário');
+                              inserir(atual_token, 'Comentário');
                               break;
 
                          case "letra":
                               if (palavrasReservadas.includes(atual_token)) {
-                                   insertTable(atual_token, 'Palavra Reservada');
+                                   inserir(atual_token, 'Palavra Reservada');
                               } else if (atual_token != "\n") {
-                                   insertTable(atual_token, 'Identificador');
+                                   inserir(atual_token, 'Identificador');
                               }
                               break;
 
                          case "operador":
                               if (atual_token == '=')
-                                   insertTable(atual_token, 'Atribuição');
+                                   inserir(atual_token, 'Atribuição');
                               else
-                                   insertTable(atual_token, 'Operador');
+                                   inserir(atual_token, 'Operador');
                               break;
 
                          case "constante":
-                              insertTable(atual_token, 'Constante Numérica');
+                              inserir(atual_token, 'Constante Numérica');
                               break;
 
                          case "literal":
-                              insertTable(atual_token, 'Constante Literal');
+                              inserir(atual_token, 'Constante Literal');
                               break;
 
                          case "delimitador":
                               if (atual_token == ',')
-                                   insertTable(atual_token, 'Separador');
+                                   inserir(atual_token, 'Separador');
                               else if (atual_token == ';')
-                                   insertTable(atual_token, 'Terminador');
+                                   inserir(atual_token, 'Terminador');
                               else if (atual_token == '(' || atual_token == '{' || atual_token == '[')
-                                   insertTable(atual_token, 'Delimitador - Abertura');
+                                   inserir(atual_token, 'Delimitador - Abertura');
                               else if (atual_token == ')' || atual_token == '}' || atual_token == ']')
-                                   insertTable(atual_token, 'Delimitador - Fechamento');
+                                   inserir(atual_token, 'Delimitador - Fechamento');
                               else
-                                   insertTable(atual_token, 'Delimitador');
+                                   inserir(atual_token, 'Delimitador');
                               break;
 
                     }
@@ -198,26 +198,26 @@ module.exports = {
                return '';
           }
 
-          function insertTable(id, token_type) {
+          function inserir(id, token_type) {
                var token = "";
                switch (token_type) {
                     case 'Identificador':
                     case 'Constante Numérica':
                     case 'Constante Literal':
-                         token = `${token_type}, ${id}>`;
+                         token = `${id} >`;
                          break;
 
                     case 'Comentário':
-                         token = ` ${token_type} , ${id} >`;
-                         
+                         token = `${id} >`;
+                         id = 'Comentário';
                          break;
 
                     default:
-                         token = `${id}> `;
+                         token = `${id} >`;
                          break;
                }
 
-               cvsFile += `${token} ${token_type}\n`;
+               saida += `${token} ${token_type}\n`;
 
           }
 
@@ -248,7 +248,7 @@ module.exports = {
 
 
 
-          return response.json( cvsFile );
+          return response.json(saida);
 
 
      },

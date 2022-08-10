@@ -5,5 +5,7 @@ module.exports = palavrasReservadas = [
     'if', 'else', 'for', 'of', 'while', 'do',
     'switch', 'case', 'default', 'break', 'continue',
     'try', 'catch', 'throw', 'finally',
-    'function', 'return', 'true', 'false', 'null'
+    'function', 'return', 'true', 'false', 'null', 'async'
 ];
+
+
